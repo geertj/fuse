@@ -384,10 +384,14 @@ func convertInMessage(
 		}
 
 		to := &fuseops.ReadFileOp{
-			Inode:  fuseops.InodeID(inMsg.Header().Nodeid),
-			Handle: fuseops.HandleID(in.Fh),
-			Offset: int64(in.Offset),
-			Size:   int64(in.Size),
+			Inode:         fuseops.InodeID(inMsg.Header().Nodeid),
+			Handle:        fuseops.HandleID(in.Fh),
+			Offset:        int64(in.Offset),
+			Size:          int64(in.Size),
+			ReadFlags:     in.ReadFlags,
+			LockOwner:     in.LockOwner,
+			Flags:         in.Flags,
+			ReadaheadSize: in.ReadaheadSize,
 			OpContext: fuseops.OpContext{
 				FuseID: inMsg.Header().Unique,
 				Pid:    inMsg.Header().Pid,
@@ -595,6 +599,7 @@ func convertInMessage(
 			Kernel:       fusekernel.Protocol{in.Major, in.Minor},
 			MaxReadahead: in.MaxReadahead,
 			Flags:        fusekernel.InitFlags(in.Flags),
+			Flags2:       fusekernel.InitFlags2(in.Flags2),
 		}
 
 	case fusekernel.OpLink:
@@ -1025,7 +1030,8 @@ func (c *Connection) kernelResponseForOp(
 		out.Major = o.Library.Major
 		out.Minor = o.Library.Minor
 		out.MaxReadahead = o.MaxReadahead
-		out.Flags = uint32(o.Flags)
+		out.Flags = uint32(o.OutFlags)
+		out.Flags2 = uint32(o.OutFlags2)
 		// Default values
 		out.MaxBackground = 12
 		out.CongestionThreshold = 9

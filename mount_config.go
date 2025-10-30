@@ -17,6 +17,7 @@ package fuse
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 	"runtime"
 	"strings"
@@ -46,6 +47,10 @@ type MountConfig struct {
 	// A logger to use for logging debug information. If nil, no debug logging is
 	// performed.
 	DebugLogger *log.Logger
+
+	// A logger to use for logging fuse wire requests. If nil, no wire logging is
+	// performed.
+	WireLogger io.Writer
 
 	// Linux only. OS X always behaves as if writeback caching is disabled.
 	//
@@ -215,6 +220,9 @@ type MountConfig struct {
 	// If EnableReaddirplus is true and this flag is false, the kernel will always
 	// use ReaddirPlus for directory listing.
 	EnableAutoReaddirplus bool
+
+	// Flag to allow mmap() with MAP_SHARED for files opened with OpenDirectIO
+	AllowDirectIOMmap bool
 
 	// UseVectoredRead is a legacy flag kept for backward compatibility. It is now a no-op.
 	//

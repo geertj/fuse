@@ -252,7 +252,8 @@ var openResponseFlagNames = []flagName{
 }
 
 // The InitFlags are used in the Init exchange.
-type InitFlags uint32
+type InitFlags uint32  // first 32 flags
+type InitFlags2 uint32 // second 32 flags
 
 const (
 	InitAsyncRead        InitFlags = 1 << 0
@@ -281,6 +282,8 @@ const (
 	InitCaseSensitive InitFlags = 1 << 29 // OS X only
 	InitVolRename     InitFlags = 1 << 30 // OS X only
 	InitXtimes        InitFlags = 1 << 31 // OS X only
+
+	InitDirectIOAllowMmap InitFlags2 = 1 << 4
 )
 
 type flagName struct {
@@ -583,13 +586,13 @@ type FlushIn struct {
 }
 
 type ReadIn struct {
-	Fh        uint64
-	Offset    uint64
-	Size      uint32
-	ReadFlags uint32
-	LockOwner uint64
-	Flags     uint32
-	padding   uint32
+	Fh            uint64
+	Offset        uint64
+	Size          uint32
+	ReadFlags     uint32
+	LockOwner     uint64
+	Flags         uint32
+	ReadaheadSize uint32
 }
 
 func ReadInSize(p Protocol) uintptr {
@@ -738,6 +741,7 @@ type InitIn struct {
 	Minor        uint32
 	MaxReadahead uint32
 	Flags        uint32
+	Flags2       uint32
 }
 
 const InitInSize = int(unsafe.Sizeof(InitIn{}))
@@ -753,7 +757,8 @@ type InitOut struct {
 	TimeGran            uint32
 	MaxPages            uint16
 	MapAlignment        uint16
-	Unused              [8]uint32
+	Flags2              uint32
+	Unused              [7]uint32
 }
 
 type InterruptIn struct {
