@@ -56,6 +56,14 @@ var contextKey interface{} = contextKeyType(0)
 // Reading a page at a time is a drag. Ask for a larger size.
 const maxReadahead = 1 << 20
 
+// The payload size of any fuse message (in or out) is limited by max_pages,
+// which negotiated between the kernel and the fuse server. Prior to kernel 4.20,
+// this was 32 pages, then until 6.13 it was 256 pages. Kernel 6.13 and later keep
+// the default at 256 but the root user can override this using the sysctl
+// fs.fuse.max_pages_limit. We keep the max at 256 and allow allow the user to
+// override it by setting MaxPages in the MountConfig.
+const maxPages = 256
+
 // Connection represents a connection to the fuse kernel process. It is used to
 // receive and reply to requests from the kernel.
 type Connection struct {
@@ -171,7 +179,11 @@ func (c *Connection) Init() error {
 
 	// Respond to the init op.
 	initOp.Library = c.protocol
-	initOp.MaxReadahead = maxReadahead
+	if c.cfg.MaxReadahead == 0 {
+		initOp.MaxReadahead = maxReadahead
+	} else {
+		initOp.MaxReadahead = c.cfg.MaxReadahead
+	}
 	initOp.MaxWrite = buffer.MaxWriteSize
 	initOp.OutFlags = fusekernel.InitExt
 
@@ -182,9 +194,13 @@ func (c *Connection) Init() error {
 		initOp.OutFlags |= fusekernel.InitAsyncRead
 	}
 
-	// kernel 4.20 increases the max from 32 -> 256
+	// MaxPages is the max payload size of any message (in or out)
 	initOp.OutFlags |= fusekernel.InitMaxPages
-	initOp.MaxPages = 256
+	if c.cfg.MaxPages == 0 {
+		initOp.MaxPages = maxPages
+	} else {
+		initOp.MaxPages = c.cfg.MaxPages
+	}
 
 	// Enable writeback caching if the user hasn't asked us not to.
 	if !c.cfg.DisableWritebackCaching {

@@ -244,6 +244,12 @@ type MountConfig struct {
 	// to always provide ReadFileOp.Dst. If the file system populates ReadFileOp.Data,
 	// that data will be used for a vectored read, irrespective of this flag's value.
 	UseVectoredRead bool
+
+	// Override MaxPages in the InitOp response. The default is 256 pages.
+	MaxPages uint16
+
+	// Override MaxReadahead in the InitOp response. The default is 1MB.
+	MaxReadahead uint32
 }
 
 type FUSEImpl uint8
