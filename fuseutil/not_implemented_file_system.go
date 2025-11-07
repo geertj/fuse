@@ -216,5 +216,11 @@ func (fs *NotImplementedFileSystem) SyncFS(
 	return fuse.ENOSYS
 }
 
+func (fs *NotImplementedFileSystem) Peek(
+	ctx context.Context,
+	op any) context.Context {
+	return ctx
+}
+
 func (fs *NotImplementedFileSystem) Destroy() {
 }
