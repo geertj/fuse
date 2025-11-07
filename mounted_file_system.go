@@ -17,6 +17,9 @@ package fuse
 import (
 	"context"
 	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 // MountedFileSystem represents the status of a mount operation, with a method
@@ -43,11 +46,17 @@ func (mfs *MountedFileSystem) Dir() string {
 // The return value will be non-nil if anything unexpected happened while
 // serving. May be called multiple times.
 func (mfs *MountedFileSystem) Join(ctx context.Context) error {
+	// Return an error on CTRL-C instead of exiting
+	signalReceived := make(chan os.Signal, 1)
+	signal.Notify(signalReceived, syscall.SIGINT)
+
 	select {
 	case <-mfs.joinStatusAvailable:
 		return mfs.joinStatus
 	case <-ctx.Done():
 		return ctx.Err()
+	case <-signalReceived:
+		return syscall.EINTR
 	}
 }
 
