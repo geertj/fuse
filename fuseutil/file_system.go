@@ -66,6 +66,9 @@ type FileSystem interface {
 	Fallocate(context.Context, *fuseops.FallocateOp) error
 	SyncFS(context.Context, *fuseops.SyncFSOp) error
 
+	// Synchronously peek at an operation as it comes in over the FUSE device.
+	Peek(context.Context, any) context.Context
+
 	// Regard all inodes (including the root inode) as having their lookup counts
 	// decremented to zero, and clean up any resources associated with the file
 	// system. No further calls to the file system will be made.
@@ -113,6 +116,8 @@ func (s *fileSystemServer) ServeOps(c *fuse.Connection) {
 		if err != nil {
 			panic(err)
 		}
+
+		ctx = s.fs.Peek(ctx, op)
 
 		s.opsInFlight.Add(1)
 		if _, ok := op.(*fuseops.ForgetInodeOp); ok {
