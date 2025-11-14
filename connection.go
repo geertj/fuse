@@ -195,12 +195,15 @@ func (c *Connection) Init() error {
 	// Tell the kernel not to use pitifully small 4 KiB writes.
 	initOp.OutFlags |= fusekernel.InitBigWrites
 
+	// Initialize the extended flags
+	initOp.OutFlags |= fusekernel.InitExt
+
 	if c.cfg.EnableAsyncReads {
 		initOp.OutFlags |= fusekernel.InitAsyncRead
 	}
 
 	// MaxPages is the max payload size of any message (in or out)
-	initOp.Flags |= fusekernel.InitMaxPages
+	initOp.OutFlags |= fusekernel.InitMaxPages
 	if c.cfg.MaxPages == 0 {
 		initOp.MaxPages = maxPages
 	} else {
