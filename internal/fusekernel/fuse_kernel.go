@@ -233,6 +233,7 @@ const (
 	OpenKeepCache   OpenResponseFlags = 1 << 1 // don't invalidate the data cache on open
 	OpenNonSeekable OpenResponseFlags = 1 << 2 // mark the file as non-seekable (not supported on OS X)
 	OpenCacheDir    OpenResponseFlags = 1 << 3 // allow caching this directory
+	OpenMmapHuge    OpenResponseFlags = 1 << 8 // mmap file using huge pages
 
 	OpenPurgeAttr OpenResponseFlags = 1 << 30 // OS X
 	OpenPurgeUBC  OpenResponseFlags = 1 << 31 // OS X

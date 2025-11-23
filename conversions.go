@@ -932,6 +932,9 @@ func (c *Connection) kernelResponseForOp(
 		if o.UseDirectIO {
 			out.OpenFlags |= uint32(fusekernel.OpenDirectIO)
 		}
+		if o.UseMmapHuge {
+			out.OpenFlags |= uint32(fusekernel.OpenMmapHuge)
+		}
 
 	case *fuseops.ReadFileOp:
 		if o.Data != nil {

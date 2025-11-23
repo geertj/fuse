@@ -689,6 +689,13 @@ type OpenFileOp struct {
 	// to the FUSE daemon.
 	OpenFlags fusekernel.OpenFlags
 
+	// Whether to use huge pages when this file is mmap'd. When enabled, every
+	// read to an mapped file will cause a PMD-sized region (Page Middle
+	// Directory, typically 2MB) be faulted in. Enabling this setting disables
+	// kernel side readahead on the mapped file. The feature requires MaxPages
+	// to be at least the PMD size.
+	UseMmapHuge bool
+
 	OpContext OpContext
 }
 
