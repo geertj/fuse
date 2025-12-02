@@ -729,6 +729,9 @@ type ReadFileOp struct {
 	// Open file description flags (O_DIRECT, O_APPEND etc)
 	Flags uint32
 
+	// The readahead window size.
+	ReadaheadSize uint32
+
 	// The destination buffer, whose length gives the size of the read.
 	// The file system can write to this buffer for non-vectored reads.
 	Dst []byte

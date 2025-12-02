@@ -588,13 +588,13 @@ type FlushIn struct {
 }
 
 type ReadIn struct {
-	Fh        uint64
-	Offset    uint64
-	Size      uint32
-	ReadFlags uint32
-	LockOwner uint64
-	Flags     uint32
-	padding   uint32
+	Fh            uint64
+	Offset        uint64
+	Size          uint32
+	ReadFlags     uint32
+	LockOwner     uint64
+	Flags         uint32
+	ReadaheadSize uint32
 }
 
 func ReadInSize(p Protocol) uintptr {
