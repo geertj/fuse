@@ -1026,7 +1026,7 @@ func (c *Connection) kernelResponseForOp(
 		out.Major = o.Library.Major
 		out.Minor = o.Library.Minor
 		out.MaxReadahead = o.MaxReadahead
-		out.Flags = uint32(o.Flags)
+		out.Flags = uint32(o.OutFlags)
 		// Default values
 		out.MaxBackground = 12
 		out.CongestionThreshold = 9
