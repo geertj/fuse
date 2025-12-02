@@ -709,6 +709,19 @@ type ReadFileOp struct {
 	// The size of the read.
 	Size int64
 
+	// Flags associated with this read. Currently the only flag is FUSE_READ_LOCKOWNER,
+	// which indicates that the LockOwner field below is set.
+	ReadFlags uint32
+
+	// An opaque 64-bit value identifying the reader for locking purposes. This field is
+	// a mere identifier, presence of this field does not indicate the file is locked.
+	// File systems can use this field to implement mandatory locking by comparing the
+	// lock owner against outstanding locks. A lock owner is only available for direct IO.
+	LockOwner uint64
+
+	// Open file description flags (O_DIRECT, O_APPEND etc)
+	Flags uint32
+
 	// The destination buffer, whose length gives the size of the read.
 	// The file system can write to this buffer for non-vectored reads.
 	Dst []byte

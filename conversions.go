@@ -385,10 +385,13 @@ func convertInMessage(
 		}
 
 		to := &fuseops.ReadFileOp{
-			Inode:  fuseops.InodeID(inMsg.Header().Nodeid),
-			Handle: fuseops.HandleID(in.Fh),
-			Offset: int64(in.Offset),
-			Size:   int64(in.Size),
+			Inode:     fuseops.InodeID(inMsg.Header().Nodeid),
+			Handle:    fuseops.HandleID(in.Fh),
+			Offset:    int64(in.Offset),
+			Size:      int64(in.Size),
+			ReadFlags: in.ReadFlags,
+			LockOwner: in.LockOwner,
+			Flags:     in.Flags,
 			OpContext: fuseops.OpContext{
 				FuseID: inMsg.Header().Unique,
 				Pid:    inMsg.Header().Pid,
