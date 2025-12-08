@@ -595,7 +595,7 @@ func convertInMessage(
 		o = &initOp{
 			Kernel:       fusekernel.Protocol{in.Major, in.Minor},
 			MaxReadahead: in.MaxReadahead,
-			Flags:        fusekernel.InitFlags(in.Flags),
+			Flags:        fusekernel.InitFlags(in.Flags) | fusekernel.InitFlags(in.Flags2)<<32,
 		}
 
 	case fusekernel.OpLink:
@@ -1027,6 +1027,7 @@ func (c *Connection) kernelResponseForOp(
 		out.Minor = o.Library.Minor
 		out.MaxReadahead = o.MaxReadahead
 		out.Flags = uint32(o.OutFlags)
+		out.Flags2 = uint32(o.OutFlags >> 32)
 		// Default values
 		out.MaxBackground = 12
 		out.CongestionThreshold = 9

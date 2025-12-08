@@ -61,7 +61,7 @@ func (fl OpenFlags) IsDirect() bool {
 
 func init() {
 	openFlagNames = append(openFlagNames, flagName{
-		bit:  uint32(OpenDirect),
+		bit:  uint64(OpenDirect),
 		name: "OpenDirect",
 	})
 }
