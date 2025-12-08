@@ -280,6 +280,7 @@ const (
 	InitNoOpendirSupport  InitFlags = 1 << 24
 	InitExt               InitFlags = 1 << 30
 	InitDirectIOAllowMmap InitFlags = 1 << 36
+	InitLargeFolios       InitFlags = 1 << 43
 
 	InitCaseSensitive InitFlags = 1 << 29 // OS X only
 	InitVolRename     InitFlags = 1 << 30 // OS X only
@@ -320,6 +321,7 @@ var initFlagNames = []flagName{
 	{uint64(InitXtimes), "InitXtimes"},
 
 	{uint64(InitDirectIOAllowMmap), "InitDirectIOAllowMmap"},
+	{uint64(InitLargeFolios), "InitLargeFolios"},
 }
 
 func (fl InitFlags) String() string {

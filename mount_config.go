@@ -224,6 +224,9 @@ type MountConfig struct {
 	// Flag to allow mmap() with MAP_SHARED for files opened with OpenDirectIO
 	AllowDirectIOMmap bool
 
+	// Enable large folio support (FUSE_LARGE_FOLIOS).
+	EnableLargeFolios bool
+
 	// UseVectoredRead is a legacy flag kept for backward compatibility. It is now a no-op.
 	//
 	// The term vectored read was a misnomer for this flag. Its actual meaning was that

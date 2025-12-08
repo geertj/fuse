@@ -249,6 +249,10 @@ func (c *Connection) Init() error {
 		initOp.OutFlags |= fusekernel.InitDirectIOAllowMmap
 	}
 
+	if c.cfg.EnableLargeFolios {
+		initOp.OutFlags |= fusekernel.InitLargeFolios
+	}
+
 	return c.Reply(ctx, nil)
 }
 
